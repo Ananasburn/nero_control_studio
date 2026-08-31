@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nero-control-studio"
+version = "0.1.0"
+description = "Desktop teaching pendant for Nero 7-DOF arms over CAN"
+requires-python = ">=3.10"
+dependencies = [
+    "PySide6>=6.6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+nero-control-studio = "nero_control_studio.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-p no:launch_testing -p no:launch_testing_ros_pytest_entrypoint"
