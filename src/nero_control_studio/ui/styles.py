@@ -101,6 +101,7 @@ QRadioButton::indicator:checked {
     border: 2px solid #ffe082;
 }
 QRadioButton:checked { color: #ffe082; font-weight: 700; }
+QCheckBox { spacing: 6px; color: #e8eaed; }
 QSlider::groove:horizontal {
     height: 8px;
     background: #12141a;
@@ -116,6 +117,45 @@ QSlider::sub-page:horizontal { background: #1565c0; border-radius: 4px; }
 QLabel#statusValue { color: #80cbc4; }
 QLabel#warningValue { color: #ffcc80; }
 QLabel#errorValue { color: #ef9a9a; }
+QListWidget#navSidebar {
+    background: #12141a;
+    border: 1px solid #3a404c;
+    border-radius: 6px;
+    padding: 6px 4px;
+    outline: none;
+}
+QListWidget#navSidebar::item {
+    padding: 12px 8px;
+    border-radius: 4px;
+    margin: 2px 4px;
+    color: #c4c7cc;
+}
+QListWidget#navSidebar::item:selected {
+    background: #ef6c00;
+    color: #fff8e1;
+    font-weight: 700;
+}
+QLabel#debugImageView {
+    background: #12141a;
+    border: 1px solid #3a404c;
+    border-radius: 4px;
+    color: #9aa0a6;
+}
+QLabel#handeyeDetectOk {
+    color: #81c784;
+    font-size: 16px;
+    font-weight: 700;
+}
+QLabel#handeyeDetectBad {
+    color: #ef9a9a;
+    font-size: 16px;
+    font-weight: 700;
+}
+QLabel#handeyeDetectIdle {
+    color: #9aa0a6;
+    font-size: 16px;
+    font-weight: 700;
+}
 QLabel#activityBanner {
     font-size: 16px;
     font-weight: 700;
@@ -136,6 +176,7 @@ ACTIVITY_BANNER_COLORS = {
     "play": ("#e3f2fd", "#1565c0"),
     "teach": ("#fce4ec", "#ad1457"),
     "jog": ("#e0f7fa", "#00838f"),
+    "handeye": ("#e8f5e9", "#2e7d32"),
     "warn": ("#ffe0b2", "#e65100"),
     "error": ("#ffcdd2", "#b71c1c"),
 }
