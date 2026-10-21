@@ -22,7 +22,12 @@ from PySide6.QtWidgets import (
 
 from nero_control_studio.arm.status import ArmSnapshot
 from nero_control_studio.constants import DEFAULT_CHANNEL, DEFAULT_CHANNELS, DEFAULT_SPEED_PERCENT
-from nero_control_studio.handeye.config import HandeyeRunConfig, SOLVE_TARGET_RIGHT_BASE
+from nero_control_studio.handeye.config import (
+    DEFAULT_DEBUG_IMAGE,
+    HandeyeRunConfig,
+    SOLVE_TARGET_RIGHT_BASE,
+)
+from nero_control_studio.handeye.preview_server import DebugPreviewServer
 from nero_control_studio.handeye.joint_names import arm_from_channel
 from nero_control_studio.handeye.session import HandeyeSession
 from nero_control_studio.ui.drag_teach_panel import DragTeachPanel
@@ -51,6 +56,7 @@ class MainWindow(QMainWindow):
         self._thread.started.connect(self._worker.start)
 
         self._handeye = HandeyeSession(self)
+        self._preview = DebugPreviewServer(str(DEFAULT_DEBUG_IMAGE))
         self._image_timer = QTimer(self)
         self._image_timer.setInterval(120)
         self._image_timer.timeout.connect(self._refresh_handeye_image)
@@ -102,6 +108,7 @@ class MainWindow(QMainWindow):
         self._handeye_page.set_channel(channel)
         self._handeye_solve_target = "camera"
         self._connect_signals()
+        self._start_browser_preview()
         self._thread.start()
 
     def _build_toolbar(self, channel: str) -> QHBoxLayout:
@@ -233,14 +240,28 @@ class MainWindow(QMainWindow):
         self._speed_label.setText(str(value))
         self._speed_requested.emit(value)
 
+    def _start_browser_preview(self) -> None:
+        try:
+            endpoints = self._preview.start()
+        except OSError as exc:
+            self._handeye_page.set_browser_preview([])
+            self._append_log(f"浏览器监控未启动：{exc}")
+            return
+        self._handeye_page.set_browser_preview(endpoints)
+        if endpoints:
+            shown = "  ".join(url for _label, url in endpoints)
+            self._append_log(f"检测画面也可在浏览器打开：{shown}")
+
     @Slot(object)
     def _on_handeye_start(self, cfg: HandeyeRunConfig) -> None:
         self._nav.setCurrentRow(1)
         self._handeye_solve_target = cfg.solve_target
+        self._preview.set_image_path(cfg.debug_image_path)
         self._handeye.start(cfg)
 
     @Slot(str)
     def _on_handeye_ready(self, path: str) -> None:
+        self._preview.set_image_path(path)
         self._handeye_page.image_view.set_image_path(path)
         self._image_timer.start()
         self._nav.setCurrentRow(1)
@@ -367,6 +388,7 @@ class MainWindow(QMainWindow):
             return
         self._closing = True
         self._image_timer.stop()
+        self._preview.stop()
         self._append_log("正在断开…")
         if self._handeye.running:
             self._handeye.stop()

@@ -52,7 +52,7 @@ nero-control-studio --channel can_right
 
 可选参数：`--channel`（默认 `can_left`）、`--interface`（默认 `socketcan`）。
 
-左侧栏可切换 **示教** / **手眼标定**。关节点动始终在主区左侧。手眼页可选求解目标：相机（`world → astra2_link`）或右基座（锁相机后求 `world → right_base_link`，补偿两基座偏差）。
+左侧栏可切换 **示教** / **手眼标定**。关节点动始终在主区左侧。手眼页可选求解目标：相机（`world → astra2_link`）或右基座（锁相机后求 `world → right_base_link`，补偿两基座偏差）。检测画面同时留在界面上，并在画面下方给出浏览器地址，便于放大监控同一张图。
 
 ## 使用
 

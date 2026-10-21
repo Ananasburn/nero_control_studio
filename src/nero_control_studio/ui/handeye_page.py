@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import html
 from pathlib import Path
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -62,6 +63,15 @@ class HandeyePage(QWidget):
         image_layout = QVBoxLayout(image_box)
         self.image_view = DebugImageView()
         image_layout.addWidget(self.image_view, 1)
+        self._preview_hint = QLabel("正在准备浏览器监控地址…")
+        self._preview_hint.setObjectName("handeyePreviewHint")
+        self._preview_hint.setWordWrap(True)
+        self._preview_hint.setTextFormat(Qt.TextFormat.RichText)
+        self._preview_hint.setOpenExternalLinks(True)
+        self._preview_hint.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextBrowserInteraction
+        )
+        image_layout.addWidget(self._preview_hint)
         root.addWidget(image_box, 3)
 
         status = QHBoxLayout()
@@ -235,6 +245,18 @@ class HandeyePage(QWidget):
         self._solve_btn.clicked.connect(self._on_solve)
         self._leader_btn.toggled.connect(self.leader_toggled)
         return box
+
+    def set_browser_preview(self, endpoints: list[tuple[str, str]]) -> None:
+        if not endpoints:
+            self._preview_hint.setText("浏览器监控未能启动，仍可使用上方画面。")
+            return
+        lines = "<br>".join(
+            f"{html.escape(label)} <a href=\"{html.escape(url)}\">{html.escape(url)}</a>"
+            for label, url in endpoints
+        )
+        self._preview_hint.setText(
+            "画面较小，也可以用浏览器放大监控（与上方是同一张检测图）：<br>" + lines
+        )
 
     def set_channel(self, channel: str) -> None:
         self._channel = channel

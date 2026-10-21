@@ -141,6 +141,14 @@ QLabel#debugImageView {
     border-radius: 4px;
     color: #9aa0a6;
 }
+QLabel#handeyePreviewHint {
+    color: #9aa0a6;
+    font-weight: 400;
+    font-size: 13px;
+}
+QLabel#handeyePreviewHint a {
+    color: #80cbc4;
+}
 QLabel#handeyeDetectOk {
     color: #81c784;
     font-size: 16px;
